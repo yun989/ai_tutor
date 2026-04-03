@@ -4,7 +4,9 @@ This plan details the recommended architecture for building your English AI Tuto
 
 ## Target Platform
 *   **Android App** (MVP): Running directly on an Android Emulator or physical device via Android Studio/VS Code.
-*   **Future Platforms**: Because we use Flutter, the code can seamlessly be compiled to iOS if needed in the future.
+*   **Web (Chrome)**: Supported out of the box for quick testing and browser use.
+*   **iOS**: Because we use Flutter, the code can seamlessly be compiled to iOS.
+*(Note: Support for Desktop platforms like Windows, macOS, and Linux have been explicitly removed to keep the project clean and focused.)*
 
 ## Architecture: Native Android via Flutter (BYOK Model)
 

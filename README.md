@@ -16,6 +16,12 @@ The application follows a **Bring Your Own Key (BYOK)** architecture to ensure c
 - **Rich Text Support**: Markdown rendering for responses to neatly display code blocks, lists, and emphasis in the explanations.
 - **State Management**: Clean architecture provided by the `provider` package to handle seamless transitions between the Onboarding and Chat interfaces.
 
+## Project Structure
+
+- `lib/`: **This is where the main Dart source code is located.** The application entry point is `lib/main.dart`.
+- `android/`, `ios/`, `web/`: Platform-specific configurations and runner code for our target platforms.
+- `docs/`: Documentation and architecture diagrams.
+
 ## Getting Started
 
 ### Prerequisites
@@ -23,7 +29,7 @@ The application follows a **Bring Your Own Key (BYOK)** architecture to ensure c
 Ensure you have the following installed on your machine:
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (latest stable version)
-- **Android Studio** (for emulator testing or physical device) or Xcode (if compiling for macOS/iOS)
+- **Android Studio** (for emulator testing or physical device) or Xcode (if compiling for iOS)
 - A **Gemini API Key** from [Google AI Studio](https://aistudio.google.com/).
 
 ### Installation
