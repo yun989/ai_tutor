@@ -43,7 +43,7 @@ Ensure you have the following installed on your machine:
 3. Run the application:
 
    ```bash
-   flutter run
+   flutter run -d chrome
    ```
 
 ## Architecture and Design

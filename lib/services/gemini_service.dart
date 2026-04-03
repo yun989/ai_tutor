@@ -4,9 +4,23 @@ class GeminiService {
   GenerativeModel? _model;
   ChatSession? _chatSession;
 
+  static Future<bool> validateApiKey(String apiKey) async {
+    try {
+      final tempModel = GenerativeModel(
+        model: 'gemini-3.1-flash-lite-preview',
+        apiKey: apiKey,
+      );
+      // countTokens is a cheap operation used to verify if the API key works
+      await tempModel.countTokens([Content.text("test")]);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   void initialize(String apiKey) {
     _model = GenerativeModel(
-      model: 'gemini-1.5-flash', // Usually flash is faster and cheaper, let's use it or pro
+      model: 'gemini-3.1-flash-lite-preview', // 快速而低成本的版本，且免費用戶可使用
       apiKey: apiKey,
       systemInstruction: Content.system(
         "You are a strict but encouraging English tutor. "

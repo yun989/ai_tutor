@@ -35,6 +35,11 @@ class TutorProvider extends ChangeNotifier {
   }
 
   Future<void> setApiKey(String apiKey) async {
+    final isValid = await GeminiService.validateApiKey(apiKey);
+    if (!isValid) {
+      throw Exception("Invalid Gemini API Key or verification failed. Please check your key.");
+    }
+    
     await ApiKeyService.saveApiKey(apiKey);
     _geminiService.initialize(apiKey);
     _isApiKeySet = true;
