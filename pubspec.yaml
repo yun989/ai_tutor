@@ -46,6 +46,7 @@ dependencies:
   firebase_auth: ^6.3.0
   http: ^1.6.0
   record: ^6.2.0
+  audioplayers: ^6.1.0
 
 dev_dependencies:
   flutter_test:

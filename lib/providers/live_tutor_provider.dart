@@ -54,10 +54,12 @@ class LiveTutorProvider extends ChangeNotifier {
           if (_state != LiveSessionState.aiSpeaking) {
             _setState(LiveSessionState.aiSpeaking);
           }
+          // Log received size
+          print("liveProvider: Received AI audio chunk (${audioBytes.length} bytes). Processing playback...");
           _audioService.playAudioChunk(audioBytes);
         },
         onTextReceived: (text) {
-          print("liveClient: Text received: $text");
+          print("liveClient: Text message arrival (Hidden): ${text.length} chars");
           _currentAiText += text;
           notifyListeners();
         },

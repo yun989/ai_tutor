@@ -28,7 +28,7 @@ The application now supports two distinct ways to practice your English:
 - **Framework**: Flutter (Dart)
 - **AI Models**: Gemini 1.5/2.0/3.1 Flash-Lite (Text), Gemini 2.0/3.1 Flash Live (Voice)
 - **Networking**: WebSockets (`web_socket_channel`) for low-latency live streams.
-- **Audio Engine**: `record` (for high-fidelity recording) and `flutter_sound` (for playback orchestration).
+- **Audio Engine**: `record` (for recording) and `audioplayers` (for high-compatibility Windows/Mobile playback).
 - **State Management**: Dual-provider architecture using the `provider` package.
 
 ## Project Structure
@@ -63,6 +63,12 @@ Ensure you have the following installed on your machine:
    ```
 
 3. Run the application:
+
+   ### 💻 Windows Setup (IMPORTANT)
+   If you are developing or running on Windows, you **MUST** enable **Developer Mode** to allow the application to link native plugins:
+   - Go to **Settings** -> **Privacy & security** -> **For developers**.
+   - Turn on **Developer Mode**.
+   - After enabling, restart your terminal and run `flutter pub get`.
 
    **For Web (Recommended Shortcut for Windows):**
    ```powershell

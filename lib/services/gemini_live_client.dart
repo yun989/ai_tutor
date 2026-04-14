@@ -130,6 +130,7 @@ class GeminiLiveClient {
               final inlineData = part['inlineData'] ?? part['inline_data'];
               if (inlineData != null && inlineData['data'] != null) {
                 final audioBytes = base64Decode(inlineData['data']);
+                print("liveClient: Received audio chunk of ${audioBytes.length} bytes");
                 onAudioReceived(audioBytes);
               }
             }
