@@ -11,7 +11,7 @@ class ChatMessage {
 
 class TutorProvider extends ChangeNotifier {
   final GeminiService _geminiService = GeminiService();
-  
+
   final List<ChatMessage> _messages = [];
   List<ChatMessage> get messages => _messages;
 
@@ -37,20 +37,22 @@ class TutorProvider extends ChangeNotifier {
   Future<void> setApiKey(String apiKey) async {
     final isValid = await GeminiService.validateApiKey(apiKey);
     if (!isValid) {
-      throw Exception("Invalid Gemini API Key or verification failed. Please check your key.");
+      throw Exception(
+        "Invalid Gemini API Key or verification failed. Please check your key.",
+      );
     }
-    
+
     await ApiKeyService.saveApiKey(apiKey);
     _geminiService.initialize(apiKey);
     _isApiKeySet = true;
     notifyListeners();
   }
-  
+
   Future<void> removeApiKey() async {
-      await ApiKeyService.deleteApiKey();
-      _isApiKeySet = false;
-      _messages.clear();
-      notifyListeners();
+    await ApiKeyService.deleteApiKey();
+    _isApiKeySet = false;
+    _messages.clear();
+    notifyListeners();
   }
 
   Future<void> sendMessage(String text) async {

@@ -33,12 +33,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
 
     try {
-      await Provider.of<TutorProvider>(context, listen: false).setApiKey(apiKey);
+      await Provider.of<TutorProvider>(
+        context,
+        listen: false,
+      ).setApiKey(apiKey);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error saving API key: $e")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error saving API key: $e")));
     } finally {
       if (mounted) {
         setState(() {
@@ -82,9 +85,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: _isLoading 
-                  ? const CircularProgressIndicator() 
-                  : const Text("Start Chatting", style: TextStyle(fontSize: 18)),
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        "Start Chatting",
+                        style: TextStyle(fontSize: 18),
+                      ),
               ),
             ],
           ),

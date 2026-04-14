@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 import '../providers/tutor_provider.dart';
+import 'live_session_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -53,16 +54,31 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: const Icon(Icons.logout),
             tooltip: 'Remove API Key',
             onPressed: () async {
-              await Provider.of<TutorProvider>(context, listen: false).removeApiKey();
+              await Provider.of<TutorProvider>(
+                context,
+                listen: false,
+              ).removeApiKey();
             },
-          )
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LiveSessionScreen()),
+          );
+        },
+        icon: const Icon(Icons.mic),
+        label: const Text('Live Tutor'),
       ),
       body: Consumer<TutorProvider>(
         builder: (context, tutorProvider, child) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (_scrollController.hasClients) {
-               _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+              _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent,
+              );
             }
           });
 
@@ -100,16 +116,17 @@ class _ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.symmetric(vertical: 6.0),
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: isUser ? Theme.of(context).colorScheme.primaryContainer : Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: isUser
+              ? Theme.of(context).colorScheme.primaryContainer
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(16.0),
         ),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.8,
+        ),
         child: isUser
             ? Text(message.text, style: const TextStyle(fontSize: 16))
-            : MarkdownBody(
-                data: message.text,
-                selectable: true,
-              ),
+            : MarkdownBody(data: message.text, selectable: true),
       ),
     );
   }
@@ -124,7 +141,7 @@ class _ChatScreenState extends State<ChatScreen> {
             offset: const Offset(0, -1),
             blurRadius: 2.0,
             color: Colors.black.withValues(alpha: 0.05),
-          )
+          ),
         ],
       ),
       child: SafeArea(
@@ -138,7 +155,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24.0),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 10.0,
+                  ),
                 ),
                 textInputAction: TextInputAction.send,
                 onSubmitted: (_) => _sendMessage(),

@@ -4,11 +4,14 @@ import 'providers/tutor_provider.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/chat_screen.dart';
 
+import 'providers/live_tutor_provider.dart';
+
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TutorProvider()),
+        ChangeNotifierProvider(create: (_) => LiveTutorProvider()),
       ],
       child: const AITutorApp(),
     ),
