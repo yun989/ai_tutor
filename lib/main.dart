@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/tutor_provider.dart';
 import 'screens/onboarding_screen.dart';
-import 'screens/chat_screen.dart';
 import 'screens/live_session_screen.dart';
 
 import 'providers/live_tutor_provider.dart';

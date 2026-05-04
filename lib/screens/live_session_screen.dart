@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../providers/live_tutor_provider.dart';
-
 import '../providers/tutor_provider.dart';
+import '../services/gemini_service.dart';
+import '../services/api_key_service.dart';
 import 'chat_screen.dart';
 
 class LiveSessionScreen extends StatefulWidget {
@@ -16,6 +18,7 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
+  final ScrollController _transcriptScrollController = ScrollController();
 
   @override
   void initState() {
@@ -37,7 +40,18 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
   @override
   void dispose() {
     _pulseController.dispose();
+    _transcriptScrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_transcriptScrollController.hasClients) {
+        _transcriptScrollController.jumpTo(
+          _transcriptScrollController.position.maxScrollExtent,
+        );
+      }
+    });
   }
 
   @override
@@ -83,6 +97,7 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
         ),
         body: Consumer<LiveTutorProvider>(
           builder: (context, provider, child) {
+            _scrollToBottom();
             return SafeArea(
               child: Column(
                 children: [
@@ -205,6 +220,7 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
         borderRadius: BorderRadius.circular(16),
       ),
       child: SingleChildScrollView(
+        controller: _transcriptScrollController,
         child: Text(
           text.isEmpty ? "Transcription will appear here..." : text,
           style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -225,10 +241,71 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
     } else {
       return FloatingActionButton.large(
         onPressed: () {
-          Provider.of<LiveTutorProvider>(context, listen: false).stopSession();
+          final provider = Provider.of<LiveTutorProvider>(context, listen: false);
+          final transcript = provider.currentAiText;
+          provider.stopSession();
+          _showSummaryDialog(context, transcript);
         },
         backgroundColor: Colors.red,
         child: const Icon(Icons.call_end, color: Colors.white, size: 36),
+      );
+    }
+  }
+
+  Future<void> _showSummaryDialog(BuildContext context, String transcript) async {
+    if (transcript.trim().length < 50) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Not enough conversation data to summarize.')),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Generating Teaching Notes...'),
+          content: SizedBox(
+            height: 100,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        );
+      },
+    );
+
+    try {
+      final apiKey = await ApiKeyService.getApiKey() ?? '';
+      final summary = await GeminiService.generateSummary(apiKey, transcript);
+      
+      if (!context.mounted) return;
+      Navigator.of(context).pop(); // dismiss loading dialog
+      
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('📝 Teaching Notes'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: SingleChildScrollView(
+                child: MarkdownBody(data: summary ?? "No summary generated."),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to generate summary: $e')),
       );
     }
   }

@@ -32,6 +32,7 @@ class LiveTutorProvider extends ChangeNotifier {
       return;
 
     _setState(LiveSessionState.connecting);
+    _currentAiText = ''; // Clear text on new session instead of on stop
     print("startSession: Connecting...");
 
     try {
@@ -125,7 +126,6 @@ class LiveTutorProvider extends ChangeNotifier {
     _audioService.stopRecording();
     _liveClient?.disconnect();
     _liveClient = null;
-    _currentAiText = '';
     _setState(LiveSessionState.disconnected);
   }
 
