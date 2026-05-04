@@ -11,12 +11,19 @@ class AudioService {
   bool _isInit = false;
   StreamSubscription<Uint8List>? _audioSubscription;
 
+  final List<int> _pcmAccumulator = [];
+  bool _isPlaying = false;
+
   Future<void> init() async {
     if (_isInit) return;
 
     // Request microphone permission natively using the record package
     if (await _recorder.hasPermission()) {
       _isInit = true;
+      _player.onPlayerComplete.listen((_) {
+        _isPlaying = false;
+        _playNext();
+      });
     } else {
       throw Exception('Microphone permission not granted');
     }
@@ -42,13 +49,29 @@ class AudioService {
     await _audioSubscription?.cancel();
     await _recorder.stop();
     await _player.stop();
+    _isPlaying = false;
+    _pcmAccumulator.clear();
   }
 
   Future<void> playAudioChunk(List<int> chunk) async {
     if (!_isInit) await init();
     
+    // Accumulate the raw PCM chunks
+    _pcmAccumulator.addAll(chunk);
+    _playNext();
+  }
+
+  Future<void> _playNext() async {
+    if (_isPlaying || _pcmAccumulator.isEmpty) return;
+    
+    _isPlaying = true;
+    
+    // Take all accumulated bytes and clear the accumulator
+    final dataToPlay = List<int>.from(_pcmAccumulator);
+    _pcmAccumulator.clear();
+    
     // Wrap raw 24kHz 16-bit Mono PCM in a WAV header
-    final wavData = _createWavHeader(chunk, 24000);
+    final wavData = _createWavHeader(dataToPlay, 24000);
     
     // Play the wrapped bytes as a source
     await _player.play(BytesSource(wavData));

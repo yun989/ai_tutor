@@ -7,7 +7,7 @@ class GeminiService {
   static Future<bool> validateApiKey(String apiKey) async {
     try {
       final tempModel = GenerativeModel(
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash-lite',
         apiKey: apiKey,
       );
       // countTokens is a cheap operation used to verify if the API key works
@@ -20,7 +20,7 @@ class GeminiService {
 
   void initialize(String apiKey) {
     _model = GenerativeModel(
-      model: 'gemini-1.5-flash', 
+      model: 'gemini-2.5-flash-lite',
       apiKey: apiKey,
       systemInstruction: Content.system(
         "You are a strict but encouraging English tutor. "
