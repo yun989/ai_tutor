@@ -48,29 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("AI English Tutor"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Remove API Key',
-            onPressed: () async {
-              await Provider.of<TutorProvider>(
-                context,
-                listen: false,
-              ).removeApiKey();
-            },
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const LiveSessionScreen()),
-          );
-        },
-        icon: const Icon(Icons.mic),
-        label: const Text('Live Tutor'),
+        title: const Text("AI English Tutor - Text Mode"),
       ),
       body: Consumer<TutorProvider>(
         builder: (context, tutorProvider, child) {

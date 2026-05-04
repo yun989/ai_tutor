@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/live_tutor_provider.dart';
 
+import '../providers/tutor_provider.dart';
+import 'chat_screen.dart';
+
 class LiveSessionScreen extends StatefulWidget {
   const LiveSessionScreen({super.key});
 
@@ -50,13 +53,11 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.close, color: Colors.white),
-            onPressed: () {
-              Provider.of<LiveTutorProvider>(
-                context,
-                listen: false,
-              ).stopSession();
-              Navigator.of(context).pop();
+            icon: const Icon(Icons.logout, color: Colors.white),
+            tooltip: 'Remove API Key',
+            onPressed: () async {
+              Provider.of<LiveTutorProvider>(context, listen: false).stopSession();
+              await Provider.of<TutorProvider>(context, listen: false).removeApiKey();
             },
           ),
           title: const Text(
@@ -64,6 +65,21 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.chat, color: Colors.white),
+              tooltip: 'Text Mode',
+              onPressed: () {
+                Provider.of<LiveTutorProvider>(context, listen: false).stopSession();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChatScreen()),
+                ).then((_) {
+                  Provider.of<LiveTutorProvider>(context, listen: false).startSession();
+                });
+              },
+            ),
+          ],
         ),
         body: Consumer<LiveTutorProvider>(
           builder: (context, provider, child) {
@@ -86,7 +102,7 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
                     ),
                   _buildTranscriptArea(provider.currentAiText),
                   const SizedBox(height: 40),
-                  _buildEndCallButton(context),
+                  _buildCallButton(context, provider.state),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -197,14 +213,23 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
     );
   }
 
-  Widget _buildEndCallButton(BuildContext context) {
-    return FloatingActionButton.large(
-      onPressed: () {
-        Provider.of<LiveTutorProvider>(context, listen: false).stopSession();
-        Navigator.of(context).pop();
-      },
-      backgroundColor: Colors.red,
-      child: const Icon(Icons.call_end, color: Colors.white, size: 36),
-    );
+  Widget _buildCallButton(BuildContext context, LiveSessionState state) {
+    if (state == LiveSessionState.disconnected || state == LiveSessionState.error) {
+      return FloatingActionButton.large(
+        onPressed: () {
+          Provider.of<LiveTutorProvider>(context, listen: false).startSession();
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.call, color: Colors.white, size: 36),
+      );
+    } else {
+      return FloatingActionButton.large(
+        onPressed: () {
+          Provider.of<LiveTutorProvider>(context, listen: false).stopSession();
+        },
+        backgroundColor: Colors.red,
+        child: const Icon(Icons.call_end, color: Colors.white, size: 36),
+      );
+    }
   }
 }
