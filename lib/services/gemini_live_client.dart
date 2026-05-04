@@ -13,12 +13,15 @@ class GeminiLiveClient {
   final Function(String) onError;
   final Function() onDisconnected;
 
+  final Function() onInterrupted;
+
   GeminiLiveClient({
     required this.onAudioReceived,
     required this.onTextReceived,
     required this.onConnected,
     required this.onError,
     required this.onDisconnected,
+    required this.onInterrupted,
   });
 
   void connect(String apiKey) {
@@ -119,6 +122,11 @@ class GeminiLiveClient {
       // Check for server_content or serverContent
       final serverContent = data['serverContent'] ?? data['server_content'];
       if (serverContent != null) {
+        if (serverContent['interrupted'] == true) {
+          print("liveClient: Server sent interruption signal.");
+          onInterrupted();
+        }
+
         final modelTurn = serverContent['modelTurn'] ?? serverContent['model_turn'];
         if (modelTurn != null) {
           final parts = modelTurn['parts'];

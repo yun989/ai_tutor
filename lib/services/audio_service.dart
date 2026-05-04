@@ -77,6 +77,14 @@ class AudioService {
     await _player.play(BytesSource(wavData));
   }
 
+  Future<void> interruptPlayback() async {
+    _pcmAccumulator.clear();
+    if (_isPlaying) {
+      await _player.stop();
+      _isPlaying = false;
+    }
+  }
+
   Uint8List _createWavHeader(List<int> pcmData, int sampleRate) {
     final int dataSize = pcmData.length;
     final int fileSize = dataSize + 36;

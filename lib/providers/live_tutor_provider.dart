@@ -73,6 +73,10 @@ class LiveTutorProvider extends ChangeNotifier {
           print("liveClient: Connection terminated.");
           stopSession();
         },
+        onInterrupted: () {
+          print("liveProvider: Interruption signal received. Clearing playback buffer.");
+          _audioService.interruptPlayback();
+        },
       );
 
       print("startSession: Initiating connection to Gemini Live...");
@@ -85,12 +89,34 @@ class LiveTutorProvider extends ChangeNotifier {
     }
   }
 
+  int _calculateAmplitude(List<int> pcmData) {
+    int maxAmplitude = 0;
+    for (int i = 0; i < pcmData.length; i += 2) {
+      if (i + 1 >= pcmData.length) break;
+      int sample = pcmData[i] | (pcmData[i + 1] << 8);
+      if ((sample & 0x8000) != 0) sample |= 0xFFFF0000;
+      int absSample = sample.abs();
+      if (absSample > maxAmplitude) maxAmplitude = absSample;
+    }
+    return maxAmplitude;
+  }
+
   Future<void> _startRecording() async {
     await _audioService.startRecording((pcmData) {
       if (_state == LiveSessionState.listening ||
           _state == LiveSessionState.aiSpeaking) {
+        
+        // Client-side VAD: Immediate local interruption if user speaks loudly
+        if (_state == LiveSessionState.aiSpeaking) {
+          int amplitude = _calculateAmplitude(pcmData);
+          if (amplitude > 3000) { // Threshold for user speaking
+            print("liveProvider: Client VAD detected speech. Interrupting local playback!");
+            _audioService.interruptPlayback();
+            _setState(LiveSessionState.listening);
+          }
+        }
+
         _liveClient?.sendAudio(pcmData);
-        // Note: In 2026 Barge-in, sending audio while AI Speaking triggers interruption
       }
     });
   }
