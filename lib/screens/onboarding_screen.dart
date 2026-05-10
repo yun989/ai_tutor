@@ -66,7 +66,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const Icon(Icons.language, size: 80, color: Colors.blueAccent),
               const SizedBox(height: 24),
               const Text(
-                "Welcome! To start learning, you need a free Gemini API Key.\n\n"
+                "Welcome! To start learning, you need a Gemini API Key.\n\n"
                 "1. Click the button below to go to Google AI Studio.\n"
                 "2. Sign in with your Google account.\n"
                 "3. Click 'Create API Key' and copy the key.\n"
@@ -77,11 +77,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const SizedBox(height: 16),
               TextButton.icon(
                 onPressed: () async {
-                  final url = Uri.parse('https://aistudio.google.com/app/apikey');
+                  final url = Uri.parse(
+                    'https://aistudio.google.com/app/apikey',
+                  );
                   if (!await launchUrl(url)) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Could not open the website')),
+                        const SnackBar(
+                          content: Text('Could not open the website'),
+                        ),
                       );
                     }
                   }
