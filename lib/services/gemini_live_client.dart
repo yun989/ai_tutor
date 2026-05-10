@@ -144,6 +144,11 @@ class GeminiLiveClient {
             }
           }
         }
+
+        final outputTranscription = serverContent['outputTranscription'] ?? serverContent['output_transcription'];
+        if (outputTranscription != null && outputTranscription['text'] != null) {
+          onTextReceived(outputTranscription['text']);
+        }
       }
     }
   }
