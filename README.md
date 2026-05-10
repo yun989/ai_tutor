@@ -76,32 +76,17 @@ Ensure you have the following installed on your machine:
 
 3. Run the application:
 
-   ### 💻 Windows Setup (IMPORTANT)
-   If you are developing or running on Windows, you **MUST** enable **Developer Mode** to allow the application to link native plugins:
-   - Go to **Settings** -> **Privacy & security** -> **For developers**.
-   - Turn on **Developer Mode**.
-   - After enabling, restart your terminal and run `flutter pub get`.
-
-   **For Web (Recommended Shortcut for Windows):**
-   ```powershell
-   Start-Process "http://localhost:8080"; flutter run -d web-server --web-port=8080
+   **For Web (Recommended for Development):**
+   ```bash
+   flutter run -d chrome
    ```
-   *Note: This will open your browser and start the server simultaneously. Simply refresh (F5) the browser once the terminal says "is being served".*
 
-   **For Mobile:**
+   **For Mobile (Android/iOS):**
    ```bash
    flutter run
    ```
-   *(Note: Recommended to run on a physical Android/iOS device to test microphone and audio streaming performance.)*
+   *(Note: Recommended to run on a physical device to test microphone and audio streaming performance.)*
 
 ## Architecture and Design
 
 Please refer to `docs/design.md` for our more detailed system and architecture descriptions, covering data flows and service breakdowns.
-
-## How to find your API Key
-
-To use the application, you'll need an active Google Gemini API key:
-1. Head over to [Google AI Studio](https://aistudio.google.com/).
-2. Sign in with your Google account.
-3. Click "Get API Key" -> "Create API Key in new project".
-4. Copy the generated API Key and paste it into the application upon launching the Onboarding screen.
