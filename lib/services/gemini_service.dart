@@ -14,7 +14,14 @@ class GeminiService {
       await tempModel.countTokens([Content.text("test")]);
       return true;
     } catch (e) {
-      return false;
+      // Only invalidate the key if it's explicitly an invalid key error.
+      // If it's a network error (e.g. SocketException), we should not force the user to re-enter their key.
+      if (e.runtimeType.toString() == 'InvalidApiKey' || 
+          e.toString().contains('API key not valid') ||
+          e.toString().contains('API_KEY_INVALID')) {
+        return false;
+      }
+      return true; // Assume true on network errors to preserve the saved key
     }
   }
 

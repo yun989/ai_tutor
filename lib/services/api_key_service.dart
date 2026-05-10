@@ -11,8 +11,7 @@ class ApiKeyService {
   static Future<String?> getApiKey() async {
     final key = await _storage.read(key: _apiKeyKey);
     if (key == null || key.isEmpty) {
-      // Default to the key from scripts/api_key.txt
-      return 'AIzaSyB5z1QIy6v0Fy7FrZw5IgA2McXjXF8qEPI';
+      return null;
     }
     return key;
   }

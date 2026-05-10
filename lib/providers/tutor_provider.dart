@@ -28,8 +28,13 @@ class TutorProvider extends ChangeNotifier {
   Future<void> _checkApiKey() async {
     final apiKey = await ApiKeyService.getApiKey();
     if (apiKey != null && apiKey.isNotEmpty) {
-      _geminiService.initialize(apiKey);
-      _isApiKeySet = true;
+      final isValid = await GeminiService.validateApiKey(apiKey);
+      if (isValid) {
+        _geminiService.initialize(apiKey);
+        _isApiKeySet = true;
+      } else {
+        await removeApiKey(); // Key is no longer valid, prompt user to enter again
+      }
       notifyListeners();
     }
   }

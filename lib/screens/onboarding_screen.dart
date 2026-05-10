@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/tutor_provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -65,9 +66,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const Icon(Icons.language, size: 80, color: Colors.blueAccent),
               const SizedBox(height: 24),
               const Text(
-                "To start conversing with your English tutor, please enter your Gemini API Key.",
+                "Welcome! To start learning, you need a free Gemini API Key.\n\n"
+                "1. Click the button below to go to Google AI Studio.\n"
+                "2. Sign in with your Google account.\n"
+                "3. Click 'Create API Key' and copy the key.\n"
+                "4. Paste it below to start your personalized tutor!",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, height: 1.5),
+              ),
+              const SizedBox(height: 16),
+              TextButton.icon(
+                onPressed: () async {
+                  final url = Uri.parse('https://aistudio.google.com/app/apikey');
+                  if (!await launchUrl(url)) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Could not open the website')),
+                      );
+                    }
+                  }
+                },
+                icon: const Icon(Icons.open_in_new),
+                label: const Text('Get Free API Key'),
               ),
               const SizedBox(height: 24),
               TextField(
