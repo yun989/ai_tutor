@@ -52,12 +52,12 @@ class GeminiService {
         model: 'gemini-2.5-flash-lite',
         apiKey: apiKey,
         systemInstruction: Content.system(
-          "你是一位專業的英文教學助理。請分析以下這段AI英文家教的對話紀錄片段。\n"
-          "請幫我萃取出這次對話的教學重點，並以繁體中文與 Markdown 格式輸出。\n"
-          "必須包含以下結構：\n"
-          "1. 📝 **重點回顧**：這段對話中教了哪些英文概念。\n"
-          "2. 📚 **單字與片語**：對話中出現的實用詞彙與用法。\n"
-          "3. 💡 **綜合建議**：給予學生的後續學習建議。"
+          "You are a professional English teaching assistant. Please analyze the following transcript of an AI English tutor session.\n"
+          "Extract the key teaching points from this conversation and output them entirely in English using Markdown format.\n"
+          "The output must include the following structure:\n"
+          "1. 📝 **Key Takeaways**: What English concepts were taught in this conversation.\n"
+          "2. 📚 **Vocabulary & Phrases**: Useful words and phrases that appeared in the conversation.\n"
+          "3. 💡 **Overall Suggestions**: Follow-up learning advice for the student."
         ),
       );
       final response = await summaryModel.generateContent([

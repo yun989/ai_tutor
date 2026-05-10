@@ -1,6 +1,11 @@
+import 'dart:io';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../providers/live_tutor_provider.dart';
 import '../providers/tutor_provider.dart';
 import '../services/gemini_service.dart';
@@ -293,6 +298,30 @@ class _LiveSessionScreenState extends State<LiveSessionScreen>
               ),
             ),
             actions: [
+              TextButton(
+                onPressed: () async {
+                  if (summary == null || summary.isEmpty) return;
+                  try {
+                    if (kIsWeb) {
+                      final bytes = Uint8List.fromList(utf8.encode(summary));
+                      final xfile = XFile.fromData(bytes, mimeType: 'text/markdown', name: 'Teaching_Notes.md');
+                      await Share.shareXFiles([xfile], text: 'My Teaching Notes');
+                    } else {
+                      final directory = await getTemporaryDirectory();
+                      final file = File('${directory.path}/Teaching_Notes.md');
+                      await file.writeAsString(summary);
+                      await Share.shareXFiles([XFile(file.path)], text: 'My Teaching Notes');
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to export note: $e')),
+                      );
+                    }
+                  }
+                },
+                child: const Text('Export Note'),
+              ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: const Text('Close'),
