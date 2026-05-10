@@ -26,7 +26,7 @@ The application now supports two distinct ways to practice your English:
 ## Technical Stack
 
 - **Framework**: Flutter (Dart)
-- **AI Models**: Gemini 1.5/2.0/3.1 Flash-Lite (Text), Gemini 2.0/3.1 Flash Live (Voice)
+- **AI Models**: Gemini 2.5 Flash-Lite (Text), Gemini 3.1 Flash Live Preview (Voice)
 - **Networking**: WebSockets (`web_socket_channel`) for low-latency live streams.
 - **Audio Engine**: `record` (for recording) and `audioplayers` (for high-compatibility Windows/Mobile playback).
 - **State Management**: Dual-provider architecture using the `provider` package.
