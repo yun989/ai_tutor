@@ -112,6 +112,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         style: TextStyle(fontSize: 18),
                       ),
               ),
+              const SizedBox(height: 24),
+              const Divider(),
+              const SizedBox(height: 8),
+              Text(
+                "By using this app, you agree to the following:",
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "• Your API key is stored securely on your device and is never sent to any third-party server.\n"
+                "• Voice audio is streamed directly to Google for AI processing. No audio is stored by this app.\n"
+                "• You are responsible for any API usage costs associated with your key.\n"
+                "• AI-generated teaching content may not always be accurate.",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[500],
+                  height: 1.6,
+                ),
+                textAlign: TextAlign.left,
+              ),
             ],
           ),
         ),
