@@ -45208,7 +45208,7 @@ p.pT(B.SO)
 q.a8J()}},
 a8J(){$.a_.rx$.push(new A.apM(this))},
 O(a){var s=null
-return A.aBH(A.aAl(s,s,s,s,s,B.XE),s,A.aAD(new A.apP(this),t.SK))},
+return A.aBH(A.aAl(s,s,s,s,s,B.XD),s,A.aAD(new A.apP(this),t.SK))},
 a8c(){var s,r,q,p=this,o=null,n=p.c
 n.toString
 n=A.a1(n)
@@ -45509,7 +45509,7 @@ case 6:case 1:return A.q(q,r)
 case 2:return A.p(o.at(-1),r)}})
 return A.r($async$zb,r)},
 O(a){var s=this,r=null,q=A.aAl(r,r,r,r,r,B.XB),p=A.aIa(s.d,B.H3,!0,r,r),o=s.e?r:s.gajz(),n=A.aRr(r,r,r,r,r,r,r,r,r,r,r,r,B.Fq,r,r,r,r,r,r,r),m=s.e?B.iW:B.Xt
-return A.aBH(q,r,A.iL(A.al9(A.pb(A.b([B.GF,B.i2,B.XD,B.RS,new A.E1(!0,new A.atN(a),r,r,r,r,B.F,r,!1,r,!0,r,new A.Zo(B.Xw,B.GB,r,r,r),r),B.i2,p,B.i2,new A.M4(o,r,r,r,n,r,r,!1,r,!0,r,m,r),B.i2,B.EV,B.RV,A.e4("By using this app, you agree to the following:",r,r,r,A.hP(r,r,B.de,r,r,r,r,r,r,r,r,13,r,r,B.dr,r,r,!0,r,r,r,r,r,r,r,r),B.bo,r),B.RU,A.e4("\u2022 Your API key is stored securely on your device and is never sent to any third-party server.\n\u2022 Voice audio is streamed directly to Google for AI processing. No audio is stored by this app.\n\u2022 You are responsible for any API usage costs associated with your key.\n\u2022 AI-generated teaching content may not always be accurate.",r,r,r,A.hP(r,r,B.j9,r,r,r,r,r,r,r,r,12,r,r,r,r,1.6,!0,r,r,r,r,r,r,r,r),B.bn,r)],t.p),B.df,B.kz,B.cT),r,B.FD,B.au),r,r))}}
+return A.aBH(q,r,A.iL(A.al9(A.pb(A.b([B.GF,B.i2,B.XE,B.RS,new A.E1(!0,new A.atN(a),r,r,r,r,B.F,r,!1,r,!0,r,new A.Zo(B.Xw,B.GB,r,r,r),r),B.i2,p,B.i2,new A.M4(o,r,r,r,n,r,r,!1,r,!0,r,m,r),B.i2,B.EV,B.RV,A.e4("By using this app, you agree to the following:",r,r,r,A.hP(r,r,B.de,r,r,r,r,r,r,r,r,13,r,r,B.dr,r,r,!0,r,r,r,r,r,r,r,r),B.bo,r),B.RU,A.e4("\u2022 Your API key is stored securely on your device and is never sent to any third-party server.\n\u2022 Voice audio is streamed directly to Google for AI processing. No audio is stored by this app.\n\u2022 You are responsible for any API usage costs associated with your key.\n\u2022 AI-generated teaching content may not always be accurate.",r,r,r,A.hP(r,r,B.j9,r,r,r,r,r,r,r,r,12,r,r,r,r,1.6,!0,r,r,r,r,r,r,r,r),B.bn,r)],t.p),B.df,B.kz,B.cT),r,B.FD,B.au),r,r))}}
 A.atL.prototype={
 $0(){this.a.e=!0},
 $S:0}
@@ -100582,9 +100582,9 @@ B.XA=new A.e3("\ud83d\udcdd Teaching Notes",null,null,null,null,null,null,null,n
 B.XB=new A.e3("Welcome to AI English Tutor",null,null,null,null,null,null,null,null,null)
 B.Uh=new A.v(!0,B.k,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.XC=new A.e3("Live English Tutor",null,B.Uh,null,null,null,null,null,null,null)
+B.XD=new A.e3("AI English Tutor - Text Mode",null,null,null,null,null,null,null,null,null)
 B.VN=new A.v(!0,null,null,null,null,null,16,null,null,null,null,null,1.5,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.XD=new A.e3("Welcome! To start learning, you need a free Gemini API Key.\n\n1. Click the button below to go to Google AI Studio.\n2. Sign in with your Google account.\n3. Click 'Create API Key' and copy the key.\n4. Paste it below to start your personalized tutor!",null,B.VN,B.bo,null,null,null,null,null,null)
-B.XE=new A.e3("AI English Tutor - Text Mode",null,null,null,null,null,null,null,null,null)
+B.XE=new A.e3("Welcome! To start learning, you need a Gemini API Key.\n\n1. Click the button below to go to Google AI Studio.\n2. Sign in with your Google account.\n3. Click 'Create API Key' and copy the key.\n4. Paste it below to start your personalized tutor!",null,B.VN,B.bo,null,null,null,null,null,null)
 B.a0i=new A.an8(0,"system")
 B.NE=new A.i(0.056,0.024)
 B.NT=new A.i(0.108,0.3085)
