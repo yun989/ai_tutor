@@ -40,6 +40,18 @@ The application now supports two distinct ways to practice your English:
 - `web/`: Web-specific configuration and assets.
 - `docs/`: Deployment plans and architecture diagrams.
 
+## 🚀 Try It Now (Web Version)
+
+You can try the fully functional Web version of the AI English Tutor directly from your browser (including mobile browsers) without installing anything!
+
+**[👉 Open AI English Tutor on GitHub Pages](https://yun989.github.io/ai_tutor/)**
+
+### How to use on mobile:
+1. Open the link above in Chrome (Android) or Safari (iOS).
+2. You can tap "Share" -> **"Add to Home Screen"** to install it as an app (PWA).
+3. Ensure you allow **Microphone Access** when prompted to use the voice tutoring feature.
+*(Note: If you experience no sound on iOS Safari after starting a call, ensure your phone is not in silent mode.)*
+
 ## Getting Started
 
 ### Prerequisites
