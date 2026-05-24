@@ -37,6 +37,9 @@ class LiveTutorProvider extends ChangeNotifier {
     print("startSession: Connecting...");
 
     try {
+      // Synchronously initialize Web Audio player to capture user click gesture
+      _audioService.initWebAudioOnly();
+
       final apiKey = await ApiKeyService.getApiKey();
       if (apiKey == null || apiKey.isEmpty) {
         throw Exception("API Key not found. Please log in again.");

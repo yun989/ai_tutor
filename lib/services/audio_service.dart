@@ -30,6 +30,12 @@ class AudioService {
   final List<int> _pcmAccumulator = [];
   bool _isPlaying = false;
 
+  void initWebAudioOnly() {
+    if (kIsWeb) {
+      _jsInitWebAudioPlayer(24000);
+    }
+  }
+
   Future<void> init() async {
     if (_isInit) return;
 
