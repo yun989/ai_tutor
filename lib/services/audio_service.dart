@@ -24,6 +24,7 @@ class AudioService {
   AudioPlayer? _player;
 
   bool _isInit = false;
+  bool _isWebAudioInit = false;
   StreamSubscription<Uint8List>? _audioSubscription;
 
   // Native-only: PCM accumulation for WAV wrapping
@@ -32,7 +33,9 @@ class AudioService {
 
   void initWebAudioOnly() {
     if (kIsWeb) {
+      if (_isWebAudioInit) return;
       _jsInitWebAudioPlayer(24000);
+      _isWebAudioInit = true;
     }
   }
 
@@ -44,8 +47,8 @@ class AudioService {
       _isInit = true;
 
       if (kIsWeb) {
-        // Initialize the Web Audio API player at 24kHz (Gemini output sample rate)
-        _jsInitWebAudioPlayer(24000);
+        // Ensure web audio is initialized securely
+        initWebAudioOnly();
       } else {
         // Native: use audioplayers
         _player = AudioPlayer();
@@ -180,6 +183,7 @@ class AudioService {
     await _recorder.dispose();
     if (kIsWeb) {
       _jsWebAudioDispose();
+      _isWebAudioInit = false;
     } else {
       await _player?.dispose();
     }
