@@ -92,13 +92,13 @@ class AudioService {
   }
 
   Future<void> playAudioChunk(List<int> chunk) async {
-    if (!_isInit) await init();
-
     if (kIsWeb) {
-      // Web: send PCM data directly to Web Audio API for gapless scheduled playback
+      // Web: play chunk directly and independently of native/recording init.
+      if (!_isWebAudioInit) initWebAudioOnly();
       final bytes = Uint8List.fromList(chunk);
       _jsWebAudioPlayChunk(bytes.toJS);
     } else {
+      if (!_isInit) await init();
       // Native: accumulate and play via audioplayers
       _pcmAccumulator.addAll(chunk);
       _playNextNative();
