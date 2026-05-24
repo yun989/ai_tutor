@@ -7,10 +7,18 @@
  */
 class WebAudioPlayer {
   constructor(sampleRate) {
-    this.audioContext = new AudioContext({ sampleRate: sampleRate });
+    this.inputSampleRate = sampleRate;
+    // Use standard AudioContext with the browser's hardware sample rate for optimal performance
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    this.audioContext = new AudioContextClass();
     this.nextPlayTime = 0;
     this.isPlaying = false;
     this.sources = [];
+
+    // Resume immediately inside the synchronous user-gesture context
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume();
+    }
   }
 
   resume() {
@@ -26,13 +34,23 @@ class WebAudioPlayer {
     const numSamples = Math.floor(pcmBytes.length / 2);
     if (numSamples === 0) return;
 
-    const buffer = this.audioContext.createBuffer(1, numSamples, this.audioContext.sampleRate);
+    // Always create the AudioBuffer with the input's actual sample rate.
+    // The Web Audio API will automatically and cleanly resample it to the context's hardware rate.
+    const buffer = this.audioContext.createBuffer(1, numSamples, this.inputSampleRate);
     const channelData = buffer.getChannelData(0);
 
-    const dataView = new DataView(pcmBytes.buffer, pcmBytes.byteOffset, pcmBytes.byteLength);
+    // Safe alignment check for fast Int16Array creation
+    let int16Array;
+    if (pcmBytes.byteOffset % 2 === 0) {
+      int16Array = new Int16Array(pcmBytes.buffer, pcmBytes.byteOffset, numSamples);
+    } else {
+      // Fallback: copy bytes to an aligned buffer
+      const alignedBuffer = pcmBytes.slice().buffer;
+      int16Array = new Int16Array(alignedBuffer, 0, numSamples);
+    }
+
     for (let i = 0; i < numSamples; i++) {
-      const sample = dataView.getInt16(i * 2, true); // little-endian
-      channelData[i] = sample / 32768.0;
+      channelData[i] = int16Array[i] / 32768.0;
     }
 
     const source = this.audioContext.createBufferSource();
@@ -41,7 +59,9 @@ class WebAudioPlayer {
 
     const now = this.audioContext.currentTime;
     if (this.nextPlayTime < now) {
-      this.nextPlayTime = now;
+      // If we are starting playback, or the buffer ran dry due to network/CPU lag,
+      // introduce a 100ms look-ahead buffer to absorb jitter and prevent stuttering.
+      this.nextPlayTime = now + 0.1;
     }
 
     source.start(this.nextPlayTime);

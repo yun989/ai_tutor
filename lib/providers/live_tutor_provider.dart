@@ -28,8 +28,9 @@ class LiveTutorProvider extends ChangeNotifier {
 
   Future<void> startSession() async {
     if (_state == LiveSessionState.connecting ||
-        _state == LiveSessionState.listening)
+        _state == LiveSessionState.listening) {
       return;
+    }
 
     _setState(LiveSessionState.connecting);
     _currentAiText = ''; // Clear text on new session instead of on stop
@@ -47,7 +48,9 @@ class LiveTutorProvider extends ChangeNotifier {
 
       _liveClient = GeminiLiveClient(
         onConnected: () {
-          print("liveClient: Setup complete! Transitioning to listening state.");
+          print(
+            "liveClient: Setup complete! Transitioning to listening state.",
+          );
           _setState(LiveSessionState.listening);
           _startRecording();
         },
@@ -56,11 +59,15 @@ class LiveTutorProvider extends ChangeNotifier {
             _setState(LiveSessionState.aiSpeaking);
           }
           // Log received size
-          print("liveProvider: Received AI audio chunk (${audioBytes.length} bytes). Processing playback...");
+          print(
+            "liveProvider: Received AI audio chunk (${audioBytes.length} bytes). Processing playback...",
+          );
           _audioService.playAudioChunk(audioBytes);
         },
         onTextReceived: (text) {
-          print("liveClient: Text message arrival (Hidden): ${text.length} chars");
+          print(
+            "liveClient: Text message arrival (Hidden): ${text.length} chars",
+          );
           _currentAiText += text;
           notifyListeners();
         },
@@ -75,7 +82,9 @@ class LiveTutorProvider extends ChangeNotifier {
           stopSession();
         },
         onInterrupted: () {
-          print("liveProvider: Interruption signal received. Clearing playback buffer.");
+          print(
+            "liveProvider: Interruption signal received. Clearing playback buffer.",
+          );
           _audioService.interruptPlayback();
         },
       );
@@ -106,12 +115,14 @@ class LiveTutorProvider extends ChangeNotifier {
     await _audioService.startRecording((pcmData) {
       if (_state == LiveSessionState.listening ||
           _state == LiveSessionState.aiSpeaking) {
-        
         // Client-side VAD: Immediate local interruption if user speaks loudly
         if (_state == LiveSessionState.aiSpeaking) {
           int amplitude = _calculateAmplitude(pcmData);
-          if (amplitude > 3000) { // Threshold for user speaking
-            print("liveProvider: Client VAD detected speech. Interrupting local playback!");
+          if (amplitude > 3000) {
+            // Threshold for user speaking
+            print(
+              "liveProvider: Client VAD detected speech. Interrupting local playback!",
+            );
             _audioService.interruptPlayback();
             _setState(LiveSessionState.listening);
           }
