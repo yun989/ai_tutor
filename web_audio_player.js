@@ -19,6 +19,18 @@ class WebAudioPlayer {
     if (this.audioContext.state === 'suspended') {
       this.audioContext.resume();
     }
+
+    // Fallback: resume on any subsequent user interaction to satisfy autoplay policies
+    const resumeHandler = () => {
+      if (this.audioContext.state === 'suspended') {
+        this.audioContext.resume();
+      } else {
+        document.removeEventListener('click', resumeHandler);
+        document.removeEventListener('touchend', resumeHandler);
+      }
+    };
+    document.addEventListener('click', resumeHandler);
+    document.addEventListener('touchend', resumeHandler);
   }
 
   resume() {
@@ -28,30 +40,24 @@ class WebAudioPlayer {
   }
 
   playPCMData(pcmBytes) {
-    this.resume();
+    try {
+      this.resume();
 
-    // pcmBytes is a Uint8Array of 16-bit little-endian PCM samples
-    const numSamples = Math.floor(pcmBytes.length / 2);
-    if (numSamples === 0) return;
+      // pcmBytes is a Uint8Array of 16-bit little-endian PCM samples
+      const numSamples = Math.floor(pcmBytes.length / 2);
+      if (numSamples === 0) return;
 
-    // Always create the AudioBuffer with the input's actual sample rate.
-    // The Web Audio API will automatically and cleanly resample it to the context's hardware rate.
-    const buffer = this.audioContext.createBuffer(1, numSamples, this.inputSampleRate);
-    const channelData = buffer.getChannelData(0);
+      // Always create the AudioBuffer with the input's actual sample rate.
+      // The Web Audio API will automatically and cleanly resample it to the context's hardware rate.
+      const buffer = this.audioContext.createBuffer(1, numSamples, this.inputSampleRate);
+      const channelData = buffer.getChannelData(0);
 
-    // Safe alignment check for fast Int16Array creation
-    let int16Array;
-    if (pcmBytes.byteOffset % 2 === 0) {
-      int16Array = new Int16Array(pcmBytes.buffer, pcmBytes.byteOffset, numSamples);
-    } else {
-      // Fallback: copy bytes to an aligned buffer
-      const alignedBuffer = pcmBytes.slice().buffer;
-      int16Array = new Int16Array(alignedBuffer, 0, numSamples);
-    }
-
-    for (let i = 0; i < numSamples; i++) {
-      channelData[i] = int16Array[i] / 32768.0;
-    }
+      // Revert to highly robust DataView to avoid any alignment/RangeError issues in Wasm/mobile Chrome
+      const dataView = new DataView(pcmBytes.buffer, pcmBytes.byteOffset, pcmBytes.byteLength);
+      for (let i = 0; i < numSamples; i++) {
+        const sample = dataView.getInt16(i * 2, true); // little-endian
+        channelData[i] = sample / 32768.0;
+      }
 
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
@@ -77,6 +83,9 @@ class WebAudioPlayer {
         this.isPlaying = false;
       }
     };
+    } catch (e) {
+      console.error("WebAudioPlayer playPCMData error:", e);
+    }
   }
 
   stop() {

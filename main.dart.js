@@ -45377,6 +45377,7 @@ n.av()
 n.e=""
 A.ey("startSession: Connecting...")
 p=4
+v.G.initWebAudioPlayer(24e3)
 s=7
 return A.t(A.yF(),$async$nT)
 case 7:m=b
